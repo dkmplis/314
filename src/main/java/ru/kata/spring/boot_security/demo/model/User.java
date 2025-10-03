@@ -16,8 +16,10 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -30,9 +32,17 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "name")
+    @Column(name = "first_name")
     @Size(min = 3, message = "Minimum 3 characters!")
-    private String name;
+    private String firstName;
+
+    @Column(name = "last_name")
+    @Size(min = 3, message = "Minimum 3 characters!")
+    private String lastName;
+
+    @Column(name = "age")
+    @Min(14)
+    private int age;
 
     @Column(name = "password")
     @Size(min = 3, message = "Minimum 3 characters!")
@@ -49,6 +59,18 @@ public class User implements UserDetails {
     private Set<Role> roles;
 
     public User() {
+    }
+
+    public User(String firstName, String lastName, int age, String password, String email, Role role) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.age = age;
+        this.password = password;
+        this.email = email;
+        if (roles==null) {
+            roles = new HashSet<>();
+        }
+        roles.add(role);
     }
 
     @Override
@@ -111,12 +133,28 @@ public class User implements UserDetails {
         this.id = id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getLastName() {
+        return lastName;
     }
 
-    public String getName() {
-        return name;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
     }
 
     public void setPassword(String password) {

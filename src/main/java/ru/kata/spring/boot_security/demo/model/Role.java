@@ -33,6 +33,8 @@ public class Role implements GrantedAuthority {
         return name;
     }
 
+    public String getAuthorityForView() {return name.replace("ROLE_", "");}
+
     public int getId() {
         return id;
     }
