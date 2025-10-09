@@ -1,5 +1,6 @@
 package ru.kata.spring.boot_security.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -19,21 +20,33 @@ public class Role implements GrantedAuthority {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column(name = "name")
-    private String name;
+    private String authority;
 
     public Role() {
     }
 
-    public Role(String name) {
-        this.name = name;
+    public Role(int id) {
+        this.id = id;
+    }
+
+    public Role(String authority) {
+        this.authority = authority;
+    }
+
+    public Role(int id, String authority) {
+        this.id = id;
+        this.authority = authority;
     }
 
     @Override
     public String getAuthority() {
-        return name;
+        return authority;
     }
 
-    public String getAuthorityForView() {return name.replace("ROLE_", "");}
+    @JsonIgnore
+    public String getAuthorityForView() {
+        return authority.replace("ROLE_", "");
+    }
 
     public int getId() {
         return id;
@@ -43,8 +56,9 @@ public class Role implements GrantedAuthority {
         this.id = id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+
+    public void setAuthority(String authority) {
+        this.authority = authority;
     }
 
     @Override
@@ -68,6 +82,6 @@ public class Role implements GrantedAuthority {
 
     @Override
     public String toString() {
-        return name;
+        return authority;
     }
 }

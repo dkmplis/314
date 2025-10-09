@@ -3,18 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>Admin page</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 <body>
 <div class="container-fluid vh-100 d-flex flex-column">
     <div class="row bg-dark py-1">
         <div class="col">
-            <span th:text="${admin.getEmail()}" class="text-white fw-bolder fs-4">admin@mail.ru</span>
+            <span class="text-white fw-bolder fs-4" id="username">admin@mail.ru</span>
             <span class="text-white fs-4">witch roles:</span>
-            <span th:each="rolesAdmin:${admin.getRoles()}">
-                <span th:text="${rolesAdmin.getAuthorityForView()}" class="text-white fw-normal fs-4 text-uppercase">
-                    roles
-                </span>
+            <span class="text-white fw-normal fs-4 text-uppercase" id="roles">
+                Roles
             </span>
         </div>
         <div class="col py-2 text-end">
@@ -29,7 +28,7 @@
     <div class="row flex-grow-1">
         <div class="col-2 p-0 my-3 ">
             <div class="d-grid gap-0">
-                <a th:href="@{admin/}" class="btn btn-outline-primary rounded-1 py-2 w-100 border-0 fs-6 text-start active " readonly>
+                <a class="btn btn-outline-primary rounded-1 py-2 w-100 border-0 fs-6 text-start active " readonly>
                     Admin
                 </a>
                 <a th:href="@{/user}" class="btn btn-outline-primary rounded-1 border-0 text-start">
@@ -52,7 +51,7 @@
                             </button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="add-tab" data-bs-toggle="tab"
+                            <button class="nav-link" id="addTab" data-bs-toggle="tab"
                                     data-bs-target="#add" type="button" role="tab">New User
                             </button>
                         </li>
@@ -81,216 +80,10 @@
                                     <th class="py-3" scope="col">Delete</th>
                                 </tr>
                                 </thead>
-                                <tbody>
-                                <tr class="border-bottom" th:each="user, stat: ${users}"
-                                    th:classappend="${stat.last} ? 'border-bottom-0' : ''">
-                                    <td class="border-0 py-3" th:text="${user.getId()}">1</td>
-                                    <td class="border-0 py-3" th:text="${user.getFirstName()}">Mark</td>
-                                    <td class="border-0 py-3" th:text="${user.getLastName()}">Otto</td>
-                                    <td class="border-0 py-3" th:text="${user.getAge()}">33</td>
-                                    <td class="border-0 py-3" th:text="${user.getEmail()}">mark@mail.ru</td>
-                                    <td class="border-0 py-3">
-                                        <span th:each="role:${user.getRoles()}">
-                                            <span th:text="${role.getAuthorityForView()}">
-                                                ROLES
-                                            </span>
-                                        </span>
-                                    </td>
-                                    <td class="border-0 py-3">
-                                        <button type="button" class="btn btn-info" data-bs-toggle="modal"
-                                                th:attr="data-bs-target='#edit'+${user.getId()}">
-                                            Edit
-                                        </button>
-                                    </td>
-                                    <td class="border-0 py-3">
-                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                                                th:attr="data-bs-target='#delete'+${user.getId()}">
-                                            Delete
-                                        </button>
-                                    </td>
-                                </tr>
+                                <tbody id="usersTable">
+
                                 </tbody>
                             </table>
-                            <div th:each="user:${users}">
-                                <div class="modal fade" th:id="'edit'+${user.getId()}" tabindex="-1">
-                                    <div class="modal-dialog modal-dialog-centered">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h1 class="modal-title fs-5">Edit user</h1>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <form th:method="PATCH" th:action="@{/admin/edit}" class="form-control border-0">
-                                                    <div class="row py-2 justify-content-center">
-                                                        <div class="col-6">
-                                                            <label for="idModuleEdit"
-                                                                   class="form-label text-center fw-bolder d-block text-center">
-                                                                Id
-                                                            </label>
-                                                            <input type="text" th:value="${user.getId()}" class="form-control" id="idModuleEdit" disabled/>
-                                                            <input type="hidden" name="id" th:value="${user.getId()}"/>
-                                                        </div>
-                                                    </div>
-                                                        <div class="row py-2 justify-content-center">
-                                                            <div class="col-6">
-                                                                <label for="firstNameModuleEdit"
-                                                                       class="form-label text-center fw-bolder d-block text-center">
-                                                                    First name
-                                                                </label>
-                                                                <input type="text" name="firstName" th:value="${user.getFirstName()}" class="form-control"
-                                                                       id="firstNameModuleEdit"/>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row py-2 justify-content-center">
-                                                            <div class="col-6">
-                                                                <label for="lastNameModuleEdit"
-                                                                       class="form-label text-center fw-bolder d-block text-center">
-                                                                    Last name
-                                                                </label>
-                                                                <input type="text" name="lastName" th:value="${user.getLastName()}" class="form-control"
-                                                                       id="lastNameModuleEdit"/>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row py-2 justify-content-center">
-                                                            <div class="col-6">
-                                                                <label for="ageModuleEdit" class="form-label text-center fw-bolder d-block text-center">
-                                                                    Age
-                                                                </label>
-                                                                <input type="number" name="age" th:value="${user.getAge()}" min="14" max="120" class="form-control"
-                                                                       id="ageModuleEdit"/>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row py-2 justify-content-center">
-                                                            <div class="col-6">
-                                                                <label for="emailModuleEdit"
-                                                                       class="form-label text-center fw-bolder d-block text-center">
-                                                                    Email
-                                                                </label>
-                                                                <input type="text" name="email" th:value="${user.getEmail()}" class="form-control"
-                                                                       id="emailModuleEdit"/>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row py-2 justify-content-center">
-                                                            <div class="col-6">
-                                                                <label for="passwordModuleEdit" class="form-label fw-bolder d-block text-center">
-                                                                    Password
-                                                                </label>
-                                                                <input type="password" class="form-control" id="passwordModuleEdit" disabled readonly/>
-                                                                <input type="hidden" name="password" th:value="${user.getPassword()}"/>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row py-2 justify-content-center">
-                                                            <div class="col-6">
-                                                                <label for="roleModuleEdit"
-                                                                       class="form-label text-center fw-bolder d-block text-center">
-                                                                    Roles
-                                                                </label>
-                                                                <select class="form-select" multiple size="2" id="roleModuleEdit" name="rolesId">
-                                                                    <option th:each="rolesEditUser:${roles}"
-                                                                            th:value="${rolesEditUser.getId()}"
-                                                                            th:selected="${user.roles != null ? #lists.contains(user.getRoles(), rolesEditUser) : false}"
-                                                                            th:text="${rolesEditUser.getAuthorityForView()}">
-                                                                        Roles
-                                                                    </option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                        <button type="submit" class="btn btn-primary">Edit</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal fade" th:id="'delete'+${user.getId()}" tabindex="-1">
-                                    <div class="modal-dialog modal-dialog-centered">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h1 class="modal-title fs-5">Delete user</h1>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <form th:method="DELETE" th:action="@{/admin/delete}" class="form-control border-0">
-                                                    <div class="row py-2 justify-content-center">
-                                                        <div class="col-6">
-                                                            <label for="idModuleDelete"
-                                                                   class="form-label text-center fw-bolder d-block text-center">
-                                                                Id
-                                                            </label>
-                                                            <input type="text" th:value="${user.getId()}" class="form-control"
-                                                                   id="idModuleDelete" readonly/>
-                                                            <input type="hidden" name="id" th:value="${user.getId()}"/>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row py-2 justify-content-center">
-                                                        <div class="col-6">
-                                                            <label for="firstNameModuleDelete"
-                                                                   class="form-label text-center fw-bolder d-block text-center">
-                                                                First name
-                                                            </label>
-                                                            <input type="text" name="firstName" th:value="${user.getFirstName()}" class="form-control"
-                                                                   id="firstNameModuleDelete" readonly/>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row py-2 justify-content-center">
-                                                        <div class="col-6">
-                                                            <label for="lastNameModuleDelete"
-                                                                   class="form-label text-center fw-bolder d-block text-center">
-                                                                Last name
-                                                            </label>
-                                                            <input type="text" name="lastName" th:value="${user.getLastName()}" class="form-control"
-                                                                   id="lastNameModuleDelete" readonly/>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row py-2 justify-content-center">
-                                                        <div class="col-6">
-                                                            <label for="ageModuleDelete" class="form-label text-center fw-bolder d-block text-center">
-                                                                Age
-                                                            </label>
-                                                            <input type="number" name="age" th:value="${user.getAge()}" min="14" max="120" class="form-control"
-                                                                   id="ageModuleDelete" readonly/>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row py-2 justify-content-center">
-                                                        <div class="col-6">
-                                                            <label for="emailModuleDelete"
-                                                                   class="form-label text-center fw-bolder d-block text-center">
-                                                                Email
-                                                            </label>
-                                                            <input type="text" name="email" th:value="${user.getEmail()}" class="form-control"
-                                                                   id="emailModuleDelete" readonly/>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row py-2 justify-content-center">
-                                                        <div class="col-6">
-                                                            <label for="roleModuleDelete"
-                                                                   class="form-label text-center fw-bolder d-block text-center">
-                                                                Roles
-                                                            </label>
-                                                            <select class="form-select" multiple size="2" id="roleModuleDelete" name="rolesId" readonly>
-                                                                <option th:each="rolesEditUser:${roles}"
-                                                                        th:value="${rolesEditUser.getId()}"
-                                                                        th:selected="${user.roles != null ? #lists.contains(user.getRoles(), rolesEditUser) : false}"
-                                                                        th:text="${rolesEditUser.getAuthorityForView()}">
-                                                                    Roles
-                                                                </option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                        <button type="submit" class="btn btn-danger">Delete</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -302,14 +95,16 @@
                     </div>
                     <div class="row border bg-white rounded-bottom-1">
                         <div class="col-12">
-                            <form th:method="POST" th:action="@{/admin/new}" th:object="${newUser}">
+                            <form>
                                 <div class="row py-2 justify-content-center">
                                     <div class="col-4">
                                         <label for="firstName"
                                                class="form-label text-center fw-bolder d-block text-center">
                                             First name
                                         </label>
-                                        <input type="text" th:field="*{firstName}" class="form-control" id="firstName"/>
+                                        <input type="text" class="form-control" id="firstName"/>
+                                        <div class="invalid-feedback" id="firstNameAddError"
+                                             style="display: none;"></div>
                                     </div>
                                 </div>
                                 <div class="row py-2 justify-content-center">
@@ -318,7 +113,9 @@
                                                class="form-label text-center fw-bolder d-block text-center">
                                             Last name
                                         </label>
-                                        <input type="text" th:field="*{lastName}" class="form-control" id="lastName"/>
+                                        <input type="text" class="form-control" id="lastName"/>
+                                        <div class="invalid-feedback" id="lastNameAddError"
+                                             style="display: none;"></div>
                                     </div>
                                 </div>
                                 <div class="row py-2 justify-content-center">
@@ -326,7 +123,8 @@
                                         <label for="age" class="form-label text-center fw-bolder d-block text-center">
                                             Age
                                         </label>
-                                        <input type="number" th:field="*{age}" min="14" max="120" class="form-control" id="age"/>
+                                        <input type="number" min="14" max="120" class="form-control" id="age"/>
+                                        <div class="invalid-feedback" id="ageAddError" style="display: none;"></div>
                                     </div>
                                 </div>
                                 <div class="row py-2 justify-content-center">
@@ -334,7 +132,8 @@
                                         <label for="email" class="form-label text-center fw-bolder d-block text-center">
                                             Email
                                         </label>
-                                        <input type="text" th:field="*{email}" class="form-control" id="email"/>
+                                        <input type="text" class="form-control" id="email"/>
+                                        <div class="invalid-feedback" id="emailAddError" style="display: none;"></div>
                                     </div>
                                 </div>
                                 <div class="row py-2 justify-content-center">
@@ -342,25 +141,25 @@
                                         <label for="password" class="form-label fw-bolder d-block text-center">
                                             Password
                                         </label>
-                                        <input type="password" th:field="*{password}" class="form-control" id="password"/>
+                                        <input type="password" class="form-control" id="password"/>
+                                        <div class="invalid-feedback" id="passwordAddError"
+                                             style="display: none;"></div>
                                     </div>
                                 </div>
                                 <div class="row py-2 justify-content-center">
                                     <div class="col-4">
-                                        <label for="rolesSelect" class="form-label text-center fw-bolder d-block text-center">
+                                        <label for="rolesSelect"
+                                               class="form-label text-center fw-bolder d-block text-center">
                                             Role
                                         </label>
-                                        <select class="form-select" multiple size="2" id="rolesSelect" name="rolesId">
-                                            <option th:each="rolesNewUser:${roles}"
-                                                    th:value="${rolesNewUser.getId()}" th:text="${rolesNewUser.getAuthorityForView()}">
-                                                Roles
-                                            </option>
+                                        <select class="form-select" multiple size="2" id="rolesSelect">
                                         </select>
                                     </div>
                                 </div>
                                 <div class="row py-2 justify-content-center">
                                     <div class="col-4 text-center">
-                                        <input type="submit" class="btn btn-success btn-lg px-2" value="Add new user"/>
+                                        <input type="submit" id="btnForAddNewUser" class="btn btn-success btn-lg px-2"
+                                               value="Add new user"/>
                                     </div>
                                 </div>
                             </form>
@@ -370,7 +169,180 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="editModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" id="editModalContent">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">Edit user</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                </div>
+                <div class="modal-body">
+                    <form class="form-control border-0">
+                        <div class="row py-2 justify-content-center">
+                            <div class="col-6">
+                                <label for="idModuleEdit"
+                                       class="form-label text-center fw-bolder d-block text-center">
+                                    Id
+                                </label>
+                                <input type="text" class="form-control" id="idModuleEdit" disabled/>
+                            </div>
+                        </div>
+                        <div class="row py-2 justify-content-center">
+                            <div class="col-6">
+                                <label for="firstNameModuleEdit"
+                                       class="form-label text-center fw-bolder d-block text-center">
+                                    First name
+                                </label>
+                                <input type="text" class="form-control"
+                                       id="firstNameModuleEdit"/>
+                                <div class="invalid-feedback" id="firstNameEditError" style="display: none;"></div>
+
+                            </div>
+                        </div>
+                        <div class="row py-2 justify-content-center">
+                            <div class="col-6">
+                                <label for="lastNameModuleEdit"
+                                       class="form-label text-center fw-bolder d-block text-center">
+                                    Last name
+                                </label>
+                                <input type="text" class="form-control"
+                                       id="lastNameModuleEdit"/>
+                                <div class="invalid-feedback" id="lastNameEditError" style="display: none;"></div>
+                            </div>
+                        </div>
+                        <div class="row py-2 justify-content-center">
+                            <div class="col-6">
+                                <label for="ageModuleEdit" class="form-label text-center fw-bolder d-block text-center">
+                                    Age
+                                </label>
+                                <input type="number" min="14" max="120" class="form-control"
+                                       id="ageModuleEdit"/>
+                                <div class="invalid-feedback" id="ageEditError" style="display: none;"></div>
+                            </div>
+                        </div>
+                        <div class="row py-2 justify-content-center">
+                            <div class="col-6">
+                                <label for="emailModuleEdit"
+                                       class="form-label text-center fw-bolder d-block text-center">
+                                    Email
+                                </label>
+                                <input type="text" class="form-control"
+                                       id="emailModuleEdit"/>
+                                <div class="invalid-feedback" id="emailEditError" style="display: none;"></div>
+                            </div>
+                        </div>
+                        <div class="row py-2 justify-content-center">
+                            <div class="col-6">
+                                <label for="passwordModuleEdit" class="form-label fw-bolder d-block text-center">
+                                    Password
+                                </label>
+                                <input type="password" class="form-control" id="passwordModuleEdit"/>
+                                <div class="invalid-feedback" id="passwordEditError" style="display: none;"></div>
+                            </div>
+                        </div>
+                        <div class="row py-2 justify-content-center">
+                            <div class="col-6">
+                                <label for="roleModuleEdit"
+                                       class="form-label text-center fw-bolder d-block text-center">
+                                    Roles
+                                </label>
+                                <select class="form-select" multiple size="2" id="roleModuleEdit">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary" id="buttonEdit">Edit</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="deleteModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">Delete user</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                </div>
+                <div class="modal-body">
+                    <form class="form-control border-0">
+                        <div class="row py-2 justify-content-center">
+                            <div class="col-6">
+                                <label for="idModuleDelete"
+                                       class="form-label text-center fw-bolder d-block text-center">
+                                    Id
+                                </label>
+                                <input type="text" class="form-control"
+                                       id="idModuleDelete" disabled/>
+                            </div>
+                        </div>
+                        <div class="row py-2 justify-content-center">
+                            <div class="col-6">
+                                <label for="firstNameModuleDelete"
+                                       class="form-label text-center fw-bolder d-block text-center">
+                                    First name
+                                </label>
+                                <input type="text" class="form-control"
+                                       id="firstNameModuleDelete" disabled/>
+                            </div>
+                        </div>
+                        <div class="row py-2 justify-content-center">
+                            <div class="col-6">
+                                <label for="lastNameModuleDelete"
+                                       class="form-label text-center fw-bolder d-block text-center">
+                                    Last name
+                                </label>
+                                <input type="text" class="form-control"
+                                       id="lastNameModuleDelete" disabled/>
+                            </div>
+                        </div>
+                        <div class="row py-2 justify-content-center">
+                            <div class="col-6">
+                                <label for="ageModuleDelete"
+                                       class="form-label text-center fw-bolder d-block text-center">
+                                    Age
+                                </label>
+                                <input type="number" min="14" max="120" class="form-control"
+                                       id="ageModuleDelete" disabled/>
+                            </div>
+                        </div>
+                        <div class="row py-2 justify-content-center">
+                            <div class="col-6">
+                                <label for="emailModuleDelete"
+                                       class="form-label text-center fw-bolder d-block text-center">
+                                    Email
+                                </label>
+                                <input type="text" class="form-control"
+                                       id="emailModuleDelete" disabled/>
+                            </div>
+                        </div>
+                        <div class="row py-2 justify-content-center">
+                            <div class="col-6">
+                                <label for="roleModuleDelete"
+                                       class="form-label text-center fw-bolder d-block text-center">
+                                    Roles
+                                </label>
+                                <select class="form-select" multiple size="2" id="roleModuleDelete" disabled>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-danger" id="buttonDelete">Delete</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+<script src="/js/adminPage.js"></script>
 </body>
 </html>

@@ -1,6 +1,5 @@
 package ru.kata.spring.boot_security.demo.model;
 
-
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -15,9 +14,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
@@ -33,23 +29,18 @@ public class User implements UserDetails {
     private int id;
 
     @Column(name = "first_name")
-    @Size(min = 3, message = "Minimum 3 characters!")
     private String firstName;
 
     @Column(name = "last_name")
-    @Size(min = 3, message = "Minimum 3 characters!")
     private String lastName;
 
     @Column(name = "age")
-    @Min(14)
     private int age;
 
     @Column(name = "password")
-    @Size(min = 3, message = "Minimum 3 characters!")
     private String password;
 
     @Column(name = "email")
-    @Email(message = "enter email!")
     private String email;
 
     @ManyToMany()
@@ -67,7 +58,7 @@ public class User implements UserDetails {
         this.age = age;
         this.password = password;
         this.email = email;
-        if (roles==null) {
+        if (roles == null) {
             roles = new HashSet<>();
         }
         roles.add(role);

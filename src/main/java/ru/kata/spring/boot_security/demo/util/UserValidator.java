@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
+import ru.kata.spring.boot_security.demo.dto.UserDTO;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.services.UserService;
 
@@ -20,22 +21,22 @@ public class UserValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return User.class.equals(clazz);
+        return UserDTO.class.equals(clazz);
     }
 
     @Override
     public void validate(Object target, Errors errors) {
-        User user = (User) target;
-        if(userService.findByEmailForValid(user.getEmail()).isPresent()) {
+        UserDTO userDTO = (UserDTO) target;
+        if (userService.findByEmailForValid(userDTO.getEmail()).isPresent()) {
             errors.rejectValue("email", "", "The email exists");
         }
     }
 
     public void validateForEdit(Object target, Errors errors) {
-        User user = (User) target;
-        Optional<User> existingUser = userService.findByEmailForValid(user.getEmail());
+        UserDTO userDTO = (UserDTO) target;
+        Optional<User> existingUser = userService.findByEmailForValid(userDTO.getEmail());
         if (existingUser.isPresent()) {
-            if (existingUser.get().getId()!=user.getId()) {
+            if (existingUser.get().getId() != userDTO.getId()) {
                 errors.rejectValue("email", "", "The email exists");
             }
         }

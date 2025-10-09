@@ -2,16 +2,14 @@ package ru.kata.spring.boot_security.demo.services;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
-import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
 import ru.kata.spring.boot_security.demo.repositories.UserRepository;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.HashSet;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -20,41 +18,51 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRep, RoleRepository roleRepository) {
+    public UserServiceImpl(UserRepository userRep, PasswordEncoder passwordEncoder) {
         this.userRepository = userRep;
-        this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
+    @Override
     public List<User> getAll() {
         return userRepository.findAll();
     }
 
+    @Override
     public User findById(int id) {
         return userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
     @Transactional
+    @Override
     public void addNew(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
 
     @Transactional
+    @Override
     public void deleteById(int id) {
         userRepository.deleteById(id);
     }
 
     @Transactional
+    @Override
     public void update(int id, User updatedUser) {
+        if (!updatedUser.getPassword().equals(userRepository.findById(id).get().getPassword())) {
+            updatedUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+        }
         updatedUser.setId(id);
         userRepository.save(updatedUser);
     }
 
+    @Override
     public User findByEmail(String email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("Email not found!"));
+                .orElseThrow(EntityNotFoundException::new);
     }
 
     @Override
@@ -62,16 +70,5 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByEmail(email);
     }
 
-    public User addRoles(User user, List<Integer> rolesId) {
-        HashSet<Role> selectedRoles = new HashSet<>();
-        if (rolesId != null) {
-            for (int roleId : rolesId) {
-                Role role = roleRepository.findById(roleId)
-                        .orElseThrow(EntityNotFoundException::new);
-                selectedRoles.add(role);
-            }
-        }
-        user.setRoles(selectedRoles);
-        return user;
-    }
+
 }
