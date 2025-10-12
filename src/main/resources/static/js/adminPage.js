@@ -25,7 +25,7 @@ const userFetchService = {
         headers: userFetchService.head
     }),
     findAllRoles: async () => await fetch(API_BASE_URL + 'roles'),
-    findCurrentUser: async () => await fetch(API_BASE_URL + 'current')
+    findCurrentUser: async () => await fetch('/api/user/current')
 }
 
 const errorHandler = {
