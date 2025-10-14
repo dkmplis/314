@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 async function loadUser() {
-    const response = await fetch('api/user/current');
+    const response = await fetch('/api/user/current');
     const user = await response.json();
     renderHead(user);
     renderTable(user);

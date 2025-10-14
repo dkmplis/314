@@ -6,6 +6,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import javax.persistence.EntityNotFoundException;
 import javax.validation.ConstraintViolationException;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,5 +39,12 @@ public class ErrorHandlingControllerAdvice {
             errors.put(fieldName, errorMessage);
         });
         return new ResponseEntity<>(new ValidErrorsInfo(errors), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<EntityNotFoundErrorInfo> onEntityNotFoundException(
+            EntityNotFoundException e) {
+        return new ResponseEntity<>(new EntityNotFoundErrorInfo(e.getMessage()),
+                HttpStatus.NOT_FOUND);
     }
 }

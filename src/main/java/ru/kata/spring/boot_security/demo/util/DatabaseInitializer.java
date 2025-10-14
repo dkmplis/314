@@ -46,9 +46,9 @@ public class DatabaseInitializer {
         if (userService.getAll().isEmpty()) {
             Role adminRole = roleService.findByName("ROLE_ADMIN");
             Role userRole = roleService.findByName("ROLE_USER");
-            User userAdmin = new User("admin", "admin", 20, passwordEncoder.encode("admin"), "admin@mail.ru", adminRole);
+            User userAdmin = new User("admin", "admin", 20, "admin", "admin@mail.ru", adminRole);
             userService.addNew(userAdmin);
-            User userUser = new User("user", "user", 29, passwordEncoder.encode("user"), "user@mail.ru", userRole);
+            User userUser = new User("user", "user", 29, "user", "user@mail.ru", userRole);
             userService.addNew(userUser);
         }
 

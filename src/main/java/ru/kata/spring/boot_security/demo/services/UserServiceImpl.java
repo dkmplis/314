@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void update(int id, User updatedUser) {
-        if (!updatedUser.getPassword().equals(userRepository.findById(id).get().getPassword())) {
+        if (!updatedUser.getPassword().equals(this.findById(id).getPassword())) {
             updatedUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
         }
         updatedUser.setId(id);
